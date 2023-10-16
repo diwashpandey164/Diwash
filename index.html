@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple Calculator</title>
+    <style>
+        /* Add some basic styling */
+        * {
+            color: white;
+            box-shadow: 4px 4px 10px rgb(49, 49, 49);
+            background: rgb(37, 36, 36);
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            transition: all 1s ease;
+            border: none;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: none;
+            box-shadow: none;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .calculator {
+            box-shadow: 5px 5px 15px rgb(59, 59, 59);
+            width: 300px;
+            height: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        input[type="text"] {
+            font-size: xx-large;
+            text-align: right;
+            width: 90%;
+            height: 20px;
+            background: transparent;
+            border: none;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            padding: 5%;
+        }
+
+        input::placeholder {
+            color: rgb(188, 171, 171);
+            font-size: xx-large;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding: 10px 10px;
+            align-items: center;
+            box-shadow: none;
+        }
+
+        .button {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            text-align: center;
+            padding: 10px;
+            font-size: 15px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .button:active {
+            transform: scale(0.9);
+        }
+
+        .button:hover {
+            background-color: #d0d0d00a;
+        }
+
+        .theme {
+            padding: 10px;
+            border-radius: 10px;
+            font-size: x-large;
+
+        }
+
+        /* Light Theme Styles */
+        .light-theme {
+            background: white;
+            color: black;
+            box-shadow: 0 5px 10px black;
+        }
+
+        .light-themes {
+            background: white;
+            color: black;
+        }
+
+        .moon-symbol,
+        .sun-symbol {
+            font-size: 24px;
+            background-color: transparent;
+            box-shadow: none;
+            margin-right: 5px;
+            display: none;
+        }
+
+        
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="calculator">
+            <input type="text" id="display" placeholder="0" class="inp" >
+            <div class="row">
+                <button class="button" style="color: red;" onclick="clearDisplay()">AC</button>
+                <button class="button" style="color: red;" onclick="clearAll()">DEL</button>
+                <button class="button" style="color: green;" onclick="appendToDisplay('%')">%</button>
+                <button class="button" style="color: green;" onclick="appendToDisplay('/')">/</button>
+            </div>
+            <div class="row">
+                <button class="button" onclick="appendToDisplay('7')">7</button>
+                <button class="button" onclick="appendToDisplay('8')">8</button>
+                <button class="button" onclick="appendToDisplay('9')">9</button>
+                <button class="button" style="color: green;" onclick="appendToDisplay('*')">x</button>
+            </div>
+            <div class="row">
+                <button class="button" onclick="appendToDisplay('4')">4</button>
+                <button class="button" onclick="appendToDisplay('5')">5</button>
+                <button class="button" onclick="appendToDisplay('6')">6</button>
+                <button class="button" style="color: green;" onclick="appendToDisplay('-')">-</button>
+            </div>
+            <div class="row">
+                <button class="button" onclick="appendToDisplay('1')">1</button>
+                <button class="button" onclick="appendToDisplay('2')">2</button>
+                <button class="button" onclick="appendToDisplay('3')">3</button>
+                <button class="button" style="color: green;" onclick="appendToDisplay('+')">+</button>
+            </div>
+            <div class="row">
+                <button class="button" onclick="appendToDisplay('0')">0</button>
+                <button class="button" onclick="appendToDisplay('00')">00</button>
+                <button class="button" style="color: yellow;" onclick="appendToDisplay('.')">.</button>
+                <button class="button" style="background: green;" onclick="calculateResult()">=</button>
+            </div>
+        </div>
+        <button class="theme">
+            <span class="moon-symbol" id="moon-symbol" onclick="updateThemeSymbol()">Dark 🌙</span>
+            <span class="sun-symbol" id="sun-symbol" onclick="updateThemeSymbol()" style="color: black;"> Light ☀️</span>
+        </button>
+
+    </div>
+
+    <script>
+        // JavaScript functions for calculator functionality
+        function appendToDisplay(value) {
+            document.getElementById('display').value += value;
+        }
+
+        function clearDisplay() {
+            document.getElementById('display').value = '';
+        }
+
+        function clearAll() {
+            const display = document.getElementById('display');
+            const currentValue = display.value;
+            if (currentValue.length > 0) {
+                display.value = currentValue.slice(0, -1);
+            }
+        }
+
+        function calculateResult() {
+            try {
+                document.getElementById('display').value = eval(document.getElementById('display').value);
+            } catch (error) {
+                document.getElementById('display').value = 'Error';
+            }
+        }
+
+        // JavaScript function for toggling the theme
+        const themeButton = document.querySelector('.theme');
+        const container = document.querySelector('.container');
+        const buttons = document.querySelectorAll('.button');
+        const calculator = document.querySelector('.calculator');
+        const rows = document.querySelectorAll('.row');
+        const inp = document.querySelector('.inp');
+
+        let isDarkTheme = true; // Track the current theme state
+
+        themeButton.addEventListener('click', toggleTheme);
+
+        function toggleTheme() {
+            container.classList.toggle('light-theme');
+            calculator.classList.toggle('light-theme');
+            inp.classList.toggle('light-theme');
+            themeButton.classList.toggle('light-theme');
+
+            rows.forEach(row => {
+                row.classList.toggle('light-themes');
+            });
+
+            buttons.forEach(button => {
+                button.classList.toggle('light-theme');
+            });
+                // Toggle the theme state and update the symbol
+    isDarkTheme = !isDarkTheme;
+    updateThemeSymbol();
+        }
+
+        function updateThemeSymbol() {
+            const moonSymbol = document.getElementById('moon-symbol');
+            const sunSymbol = document.getElementById('sun-symbol');
+
+            if (isDarkTheme) {
+                moonSymbol.style.display = 'inline';
+                sunSymbol.style.display = 'none';
+            } else {
+                moonSymbol.style.display = 'none';
+                sunSymbol.style.display = 'inline';
+            }
+        }
+
+        // Initial setup: show moon symbol for dark theme
+        updateThemeSymbol();
+
+
+
+    </script>
+</body>
+
+</html>
